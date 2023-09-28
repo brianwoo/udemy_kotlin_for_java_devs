@@ -23,7 +23,12 @@
   - Byte
   - Boolean
   - Char
-  - Any  
+  - Any     (like Object in Java)
+  - Unit    (Not return anything in Kotlin)  
+  - Nothing (Indicates it won't return) 
+    - Use case: it only throws an exception (method not yet implemented)
+    - Use case: Method goes into an infinite loop
+    - Code is not reachable after calling a function that returns Nothing
 
 ### Array
   - Array of Longs, Ints
@@ -135,3 +140,46 @@
 
 ### Import
   - We can shorten the class/method imported with "as" keyword
+
+## Section 06 Topics
+
+### Try-Catch
+- Kotlin does not distinguish between checked and unchecked exceptions
+- Try-catch can be an expression and return a value
+- Finally cannot return a value
+
+### If Condition / Expression
+- If can be used to as a condition check and also an expression (which can return a value)
+- Kotlin does NOT have Ternary operation, instead use the "if" expression
+
+### When Condition / Expression
+- "when" in Kotlin is like "switch" in Java
+- "when" can be used to as a condition check and also an expression (which can return a value)
+- "when" conditions:
+  - Comma means OR <b>e.g. x,y</b>
+  - In range <b>e.g. in x..y</b>
+  - Expressions <b>e.g. y + 10</b>
+  - Switch between different types <b>e.g. is String</b>
+  - Switch between different tests (without a value pass into when) <b>e.g. num1 < num2</b>
+  - Can switch between different enums <b>e.g. Season.FALL</b>
+
+### Range operator
+- range operator 
+  - range numbers are INCLUSIVE: 1..5 means 1 <= x <= 5
+  - range can be for numbers, chars, strings (anything comparable)
+  - backward range (.downTo())
+  - Changing step in range (only for numeric range)
+
+### Loops
+- While loop in Kotlin is the same as Java
+- For loop in Kotlin is DIFFERENT than in Java
+- For loop:
+  - with range <b>e.g. for (i in range)</b>
+  - loop through each char in a string <b>e.g. for (c in str)</b>
+  - loop until <b>e.g. for (i in 1 until 10)</b> Note: (end num is exclusive: 1 <= x < 10)
+  - loop through an array <b>e.g. for (season in seasons)</b>
+  - loop through an array with indexes <b>e.g. for (index in seasons.indices)</b>
+  - forEach with lambda <b>e.g. seasons.forEach {}</b>
+  - forEachIndexed with lambda <b>e.g. seasons.forEachIndexed {}</b>
+  - named loop (use case: breaking out of nested loop, could get ugly)
+
