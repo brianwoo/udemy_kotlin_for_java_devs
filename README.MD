@@ -359,3 +359,26 @@
 - Declaration Site Variance:
   - It's applied to OUR classes
   - It's used when we have control of changing a class
+
+
+## Section 08 Topics
+
+### Reading text files
+- Reader.readLines() automatically closes the reader when done
+- Reader.readText() needs closing reader explicitly
+- Reader.use() function - a closeable function even if exception thrown
+- Tip: functions with "use" in its name mean it does auto close
+- File.readText() automatically closes the reader when done
+- Reader.readLines(), Reader.readText(), Reader.use(), File.readText()
+  - Read all lines into memory. Not recommended if file is BIG
+- use forEachLine to read BIG files
+
+### Reading Binary Files
+- Reading binary files will need to use Java library
+- Try with Resources equivalent in Kotlin is to use one of the "use" functions
+
+### Walking file tree
+- walkTopDown() returns a sequence
+- walkBottomUp() returns a sequence
+- walk(), specify a direction, returns a sequence
+
