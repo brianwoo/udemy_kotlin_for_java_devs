@@ -36,9 +36,18 @@
   - Create Array with size & a initializing lambda
   - Create Array without initializing lambda
   - Array of mixed types (Any)
-  - Java int[] vs Kotlin IntArray vs Kotlin Array
-    - Convert Kotlin Array -> Java int[]
-    - Convert Java int[] -> Kotlin Array
+  - Kotlin's "Arrays" are Java Object[] under the hood (e.g. Integer[], Double[])
+  - Kotlin array creation under the hood:
+    - Array(5) {...}   produces => Java Integer[]
+    - arrayOf(1,2,3)   produces => Java Integer[]
+    - intArrayOf(1,2)  produces => Java int[] 
+    - IntArray(5)      produces => Java int[]
+
+### Array Conversion  
+  - Convert Java int[] -> Integer[]:
+    - kotlinArray = smallInts.toTypedArray()
+  - Convert Integer[] -> Java int[]
+    - smallInts = kotlinArray.toIntArray()    
 
 ### Null References
   - Null-safe operator  ?
@@ -183,3 +192,170 @@
   - forEachIndexed with lambda <b>e.g. seasons.forEachIndexed {}</b>
   - named loop (use case: breaking out of nested loop, could get ugly)
 
+
+## Section 07 Topics
+
+### Lambda Expressions
+- Lambdas are written in between a set of {}
+- Use "it" to refer to a parameter passed in
+- "it" is only available if that's the only parameter
+- Instead of using a lambda, we can use "member reference" as a parameter
+- Lambda can change variables outside of the lambda, unlike in Java
+- 3 Ways to execute a Lambda:
+  1. "run" function:
+      * "run" can take a function that takes no parameter and returns a Unit
+  2. "with" function:
+      * takes a parameter (aka a receiver)
+      * takes a lambda (last arg, which we can write it as {})
+      * return a value
+      * Shortcut: when using "with", the "receiver" inside the lambda can be ignored
+      * Shortcut: or use "this" to refer to the receiver
+      * Shortcut: last line in the lambda is automatically returned (don't need return)
+  3. "apply" function:
+      - takes a lambda (last arg, which we can write it as {})
+      - return the receiver
+- Return inside lambda:
+  - non-local return, meaning, it returns from lambda and the enclosing function
+  - for local return, meaning, it returns from lambda only, use a label
+- Nested lambda:
+  - Use label to clarify which lambda "this" we are referring to
+
+### Collections
+- Collections has mutable / immutable versions
+- Tip: use yourObject.javaClass to find out what Java class it is
+- Useful methods (like in JS):
+  - filter(), map()
+  - all() - return true if the condition of ALL entries satisfies
+  - any() - return true if the condition of ANY entry satisfies
+  - count() - return the number of conditions satisfies
+  - find() - find a entry with condition in a List
+  - groupBy() - group certain entry by a condition, returns a Map
+  - toSortedMap() - sort a Map by key
+  - sortedBy() - sort a List by a condition
+
+### Collections: List
+- Creating different lists:
+  - listOf() produces an immutable list
+  - arrayListOf() produces a mutable list
+  - emptyList()
+  - listOfNotNull()
+  - Convert array to list: listOf(*array)
+  - Convert int[] to Kotlin List: ints.toList()
+- list.minBy(): Look for the minimum number
+- list.last(): Get last element of a List
+- list.reversed():   Reverse a list
+- list.asReversed(): Reverse a list
+- list.getOrNull(5): Get Element at position Or Null
+- list.max(): Get max in a List
+- list1 + list2: Join 2 lists together
+- list1.zip(list2): Join 2 lists together in pairs
+- list1.union(list2): Combining 2 lists with NO DUPLICATES
+- list.distinct(): Remove duplicate items in a List
+- list.toMutableList(): Change list to mutable
+
+### Collections: Map
+- Like Lists, there is a mutable and an immutable version
+- mapOf() produces an immutable Map
+- mutableMapOf() produces a mutable Map
+- hashMapOf() produces a mutable Map
+- Pair: we can use destructuring function like in JS
+- Destructuring a regular object:
+  - For a regular class to destructure, we need to add "component functions"
+  - Data classes come with "component functions" for FREE
+
+### Collections: Set
+- plus(), minus(), average(), drop() methods
+- setOf() produces an immutable set
+- immutableSet.plus() will return a new immutable set
+- mutableSetOf() produces a mutable set
+- mutableSet.plus() will return change the set
+
+### Collection vs Sequence
+- Collection:
+  - Each operation is executed on the entire collection
+  - New collection is created for each operation
+  - Should be used on a SMALL data set
+- Sequence:
+  - Uses an iterator to pass one element at a time to each intermediate operation
+  - The same element is then passed to the next operation, ... until reaches the terminal operation
+  - It then process the next element (remember: it uses an iterator)
+  - If terminal operation (which does not return a sequence e.g. toList()) is missing at the end, the sequence operations will NOT be executed
+  - Sequence can save time when working with a LARGE data set as some condition may end early
+- Convert collection --> sequence
+  - collection.asSequence()
+
+
+### Generics
+- Generics can be used in functions and extension functions
+
+### Generics (upperbound)
+- fun <T: Number?> myFunc()
+  - Generic type but only subclass of Number (setting upper bound)
+  - Nullable Upper bound is set by adding "?"
+  - where keyword: to set multiple generics upper bound
+  - Generic type T is "nullable Any" by default
+    - To restrict "non-nullable Any", we just do <T: Any>
+  - Kotlin is similar to Java where generic types are erased (Generics is a COMPILE TIME feature)
+  - To type check generic types, we have to use <*> (star projection)
+    - E.g. if (listAny is List<*>) {}
+
+### Generics (reified - dealing with erasure)
+- To get around the type being "erased" in collections, we can use Reified Type
+  - Need to do 2 things:
+    - Set the function as inline
+    - Set the generic type as <reified T>
+- Reified is only useful if we need to check a generic type inside a function
+- Only inline functions can be reified
+
+### Generics (Variance)
+- 3 Types of Variant classes:
+  - Invariant (default for generic classes)
+  - Covariant
+  - Contravariant
+- <b>For easy memorization</b>:
+  - Covariant:
+    - Super class: Garden\<Flower>, can accept ITSELF and DOWN the inheritance tree
+    - Use "out" keyword - return type only
+    - Remember: <b>Covariance - Down - out</b>
+  - Contravariant:
+    - Garden\<Rose>, can accept ITSELF and UP the inheritance tree
+    - Use "in" keyword - input params only
+    - Remember: <b>Contravariance - Up - in</b>
+
+### Generics (Invariant)
+- Invariant wants the exact generic type, if param is Garden\<Number>, passing Garden\<Int> gives err
+- A "sub" type generic class variable can NOT be passed to its "super" type as a parameter
+- E.g. Garden\<Rose> is passed as a param to a fun myFunc(Garden\<Flower>)
+- Solution: Convert the Invariant generic type to a Covariant type
+- Reasoning: Invariant only wants the exact generic type:
+  - There is no chance that a wrong type is passed into an add().
+  - Invariant classes are made READ, WRITE
+  - E.g. MutableList
+
+### Generics (Invariant -> Covariant)
+- Covariant means it can take both generic types: the same type and sub types
+- E.g. It's OK to pass Garden\<Rose> as a param to a function myFunc(Garden\<Flower>)
+- To convert an Invariant generic type to a Covariant type:
+  - we add "out" keyword to the Invariant generic type
+  - e.g. class Garden\<out T: Flower>
+  - "out" means MEMBER functions can ONLY return T, not T as an input param
+  - Reasoning: Because both generic types can be passed, as a protection feature:
+  - All member functions can not accept this covariant variable as an input param
+    - This covariant variable can only be returned
+    - Covariant classes are made READONLY
+    - E.g. List and ImmutableList
+
+### Generics (Invariant -> Contravariant)
+- The opposite of the Covariance
+  - We start with a class of Sub type E.g. Garden\<Rose>
+  - Use "in" keyword - input params only
+  - where the member methods of Garden\<Rose> can accept both ITSELF and the Super type E.g. Garden\<Flower>
+  - We are looking at "UP" the inheritance tree
+  
+### Generics (Use site vs Declaration Site Variance)
+- Use Site Variance:
+  - It's applied to method outside of OUR classes
+  - It's used when a class cannot be changed (E.g. 3rd party classes)
+- Declaration Site Variance:
+  - It's applied to OUR classes
+  - It's used when we have control of changing a class
